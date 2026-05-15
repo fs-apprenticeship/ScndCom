@@ -1,0 +1,23 @@
+{
+  /*** General ***/
+
+  // Auto-fix on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+
+  /*** StyleLint ***/
+
+  // Disable VS Code's built-in CSS validation (Stylelint handles this now)
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+
+  // Enable Stylelint & point it to pnpm
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "postcss"],
+
+  // Ensure the IDE uses the local stylelint binary via pnpm
+  "stylelint.stylelintPath": "./node_modules/stylelint"
+}

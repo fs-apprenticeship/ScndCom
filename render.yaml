@@ -1,0 +1,23 @@
+services:
+  - type: web
+    runtime: node
+    name: nextjs-template-web
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nextjs-template-db
+          property: connectionString
+      - key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+
+databases:
+  - name: nextjs-template-db
+    plan: free
+    databaseName: nextjs_template

@@ -1,0 +1,11 @@
+if ! git rev-parse --verify ORIG_HEAD >/dev/null 2>&1; then
+  exit 0
+fi
+
+changed_migrations="$(git diff --name-only ORIG_HEAD HEAD -- prisma/migrations)"
+
+if [ -z "$changed_migrations" ]; then
+  exit 0
+fi
+
+printf "\nNew Prisma migrations were pulled:\n%s\n\nRun npm run db:reset (preferred) or npm run db:migrate before continuing.\n" "$changed_migrations"

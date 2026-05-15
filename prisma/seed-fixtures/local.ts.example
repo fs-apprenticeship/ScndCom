@@ -1,0 +1,14 @@
+import { type PrismaClient } from "@/generated/prisma/client";
+
+import { type Fixture } from "../seed-helpers/types";
+
+export const localFixture: Fixture = {
+  accounts: [
+    {
+      clerkUserId: "your-clerk-user-id",
+    },
+  ],
+  afterSeed: async (_prisma: PrismaClient) => {
+    // Add any local-only seed logic here. Keep it idempotent.
+  },
+};

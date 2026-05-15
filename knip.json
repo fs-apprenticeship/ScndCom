@@ -1,0 +1,30 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["prisma/seed.ts!"],
+  "project": ["**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}!", "!src/test/**!"],
+  "ignoreDependencies": [
+    "@prisma/client",
+    "@quramy/prisma-fabbrica",
+    "@vitest/coverage-v8",
+    "dotenv",
+    "madr",
+    "openai",
+    "tailwindcss",
+    "zod"
+  ],
+  "ignoreBinaries": ["tsx"],
+  "ignoreFiles": [
+    "prismalint.config.mjs",
+    "scripts/db-reset.js",
+    "scripts/prisma-watch.js",
+    "src/features/identity/api/require-current-account.ts",
+    "src/lib/openai/generate-structured.ts",
+    "src/lib/openai/generate-text-stream.ts",
+    "src/lib/openai/generate-text.ts",
+    "src/lib/stream/request-stream.ts"
+  ],
+  "ignoreIssues": {
+    "prisma/schema.prisma": ["unlisted"]
+  },
+  "tags": ["-lintignore"]
+}
