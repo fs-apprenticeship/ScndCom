@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@boundaryml/baml": "^0.222.0",
-    "@clerk/nextjs": "^6.39.3",
+    "@clerk/nextjs": "^6.39.5",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.8.0",
     "@sentry/nextjs": "^10.40.0",
