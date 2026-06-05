@@ -44,7 +44,3 @@ next-env.d.ts
 # generated
 src/generated
 prisma/seed-fixtures/local.ts
-
-*.http
-*.rest
-rest-client.env.json

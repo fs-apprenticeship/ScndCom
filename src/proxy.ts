@@ -3,7 +3,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
-  ...(process.env.NODE_ENV === "development" ? ["/api/calendar(.*)"] : []),
+  "/api/calendar(.*)",
 ]);
 
 export default clerkMiddleware((auth, request) => {
