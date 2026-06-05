@@ -1,8 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": ["prisma/seed.ts!"],
-  "project": ["**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}!", "!src/test/**!"],
+  "project": [
+    "**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}!",
+    "!src/test/**!",
+    "!src/baml_client/**!",
+    "!baml_client/**!"
+  ],
   "ignoreDependencies": [
+    "@boundaryml/baml",
     "@prisma/client",
     "@quramy/prisma-fabbrica",
     "@vitest/coverage-v8",
