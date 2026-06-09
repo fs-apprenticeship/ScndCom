@@ -6,8 +6,7 @@ import { NextResponse } from "next/server";
 import { b } from "@/baml_client";
 
 export async function POST(request) {
-  // const { userId } = await auth();
-  const userId = process.env.CLERK_TEST_USER_ID; // TODO: remove this line when auth is wired up
+  const { userId } = await auth();
 
   if (!userId) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

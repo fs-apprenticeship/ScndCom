@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("theme") === "dark";
-  });
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+    const stored = localStorage.getItem("theme") === "dark";
+    setDark(stored);
+    document.documentElement.classList.toggle("dark", stored);
+  }, []);
 
   function toggle() {
     const next = !dark;
@@ -20,8 +19,8 @@ export default function ThemeToggle() {
 
   return (
     <button
-      className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium"
       onClick={toggle}
+      className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium"
     >
       {dark ? "○" : "●"}
     </button>

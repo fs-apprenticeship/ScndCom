@@ -1,22 +1,24 @@
 export const runtime = "nodejs";
 
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  // const { userId } = await auth();
-  const userId = process.env.CLERK_TEST_USER_ID; // TODO: remove this line when auth is wired up
-
+  const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
+  const client = await clerkClient();
+  const { data } = await client.users.getUserOauthAccessToken(userId, "google");
+  const googleAccessToken = data[0]?.token;
+
+  if (!googleAccessToken) {
+    return NextResponse.json({ error: "no google token found" }, { status: 401 });
+  }
+
   const { action } = await request.json();
-
-  // placeholder until oauth is wired up
-  const googleAccessToken = process.env.GOOGLE_TEST_ACCESS_TOKEN;
-
   const event = await createCalendarEvent(action.payload, googleAccessToken);
-
   return NextResponse.json({ event, status: "success" });
 }
 
