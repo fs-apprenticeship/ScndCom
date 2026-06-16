@@ -1,12 +1,12 @@
 class CreateDocAction {
     title string @description("The title of the document")
     content string @description("The content of the document delivered in a structured markdown format.")
-    topic string @description("The topic of the document")
+    topics string[] @description("The top 3 main topics of the document")
     learned_profile LearnedProfile
 }
 
 class LearnedProfile {
-    learning_style string @description("The learning style of the user based on the prompt")
+    learning_style string @description("A short summary of the perceived learning style of the user based on the prompt and topics")
     preferred_formats string[] @description("The format preferences of the user")
 }
 
