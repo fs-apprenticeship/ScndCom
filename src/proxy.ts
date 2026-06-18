@@ -4,6 +4,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/api/calendar(.*)",
   "/api/auth/sync(.*)",
   "/createDoc/test",
   "/api/createDoc/test",
@@ -11,24 +12,15 @@ const isPublicRoute = createRouteMatcher([
   "/api/createDoc"
 ]);
 
-export default clerkMiddleware(async (auth, request): Promise<void> => {
-  if (isPublicRoute(request)) return;
-
-  const signInUrl = new URL("/sign-in", request.url);
-  const redirectUrl = `${request.nextUrl.pathname}${request.nextUrl.search}`;
-
-  if (redirectUrl !== "/") {
-    signInUrl.searchParams.set("redirect_url", redirectUrl);
+export default clerkMiddleware((auth, request) => {
+  if (!isPublicRoute(request)) {
+    auth.protect();
   }
-
-  await auth.protect({ unauthenticatedUrl: signInUrl.toString() });
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes.
     "/(api|trpc)(.*)",
   ],
 };
