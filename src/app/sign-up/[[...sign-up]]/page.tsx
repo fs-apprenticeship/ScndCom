@@ -1,6 +1,7 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 
+import ThemeToggle from "@/app/_components/theme-toggle";
 import getAuthRedirectUrl from "@/app/_lib/get-auth-redirect-url";
 
 type SignUpPageProps = {
@@ -26,6 +27,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           </Link>
 
           <nav className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium"
               href="/sign-in"

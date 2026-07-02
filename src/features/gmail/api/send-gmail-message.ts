@@ -1,0 +1,53 @@
+import buildRawEmail from "@/features/gmail/lib/build-raw-email";
+
+type GmailMessageResponse = {
+  id: string;
+  threadId: string;
+};
+
+type SendGmailMessageInput = {
+  accessToken: string;
+  body: string;
+  subject: string;
+  to: string;
+};
+
+export default async function sendGmailMessage({
+  accessToken,
+  body,
+  subject,
+  to,
+}: SendGmailMessageInput): Promise<GmailMessageResponse> {
+  const raw = buildRawEmail({ body, subject, to });
+
+  const response = await fetch(
+    "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+    {
+      body: JSON.stringify({ raw }),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+
+    if (
+      response.status === 403 &&
+      errorBody.includes("ACCESS_TOKEN_SCOPE_INSUFFICIENT")
+    ) {
+      throw new Error(
+        "Gmail send access was not granted. Sign out, sign in again with Google, and approve Gmail permissions. If the prompt does not appear, add https://www.googleapis.com/auth/gmail.send in Clerk and Google Cloud, then reconnect your Google account.",
+      );
+    }
+
+    throw new Error(
+      `Gmail API request failed (${response.status}): ${errorBody}`,
+    );
+  }
+
+  return response.json() as Promise<GmailMessageResponse>;
+}
