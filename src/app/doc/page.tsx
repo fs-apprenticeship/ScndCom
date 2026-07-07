@@ -13,7 +13,7 @@ export default function CreateDocPage() {
   function handleCreate() {
     setLoading(true);
     setError(null);
-    fetch("/api/createDoc", {
+    fetch("/api/doc", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
