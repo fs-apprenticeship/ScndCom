@@ -28,6 +28,7 @@ export default function TestIntentPage() {
     unknown
   > | null>(null);
   const [calendarClarification, setCalendarClarification] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   function addLog(entry: string) {
     setLog((prev) => [
@@ -119,6 +120,7 @@ export default function TestIntentPage() {
     setDoc(null);
     setPendingCalendarAction(null);
     setCalendarClarification(false);
+    setShowConfirmation(false);
     setLog([]);
   }
 
@@ -166,9 +168,9 @@ export default function TestIntentPage() {
               <button
                 className="inline-flex items-center justify-center rounded-md border px-6 py-2.5 text-sm font-medium disabled:opacity-40"
                 disabled={loading || !transcript.trim()}
-                onClick={parseIntent}
+                onClick={() => setShowConfirmation(true)}
               >
-                {loading ? "..." : "Parse Intent"}
+                Submit Transcript
               </button>
               <button
                 className="inline-flex items-center justify-center rounded-md border px-6 py-2.5 text-sm font-medium disabled:opacity-40"
@@ -184,6 +186,28 @@ export default function TestIntentPage() {
                 Clear
               </button>
             </div>
+
+            {showConfirmation && (
+              <div className="w-full rounded-md border p-4 space-y-3 text-sm text-foreground">
+                <p className="font-semibold">Confirm transcript</p>
+                <p className="text-muted-foreground">{transcript}</p>
+                <div className="flex gap-2">
+                  <button
+                    className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium disabled:opacity-40"
+                    disabled={loading}
+                    onClick={() => { parseIntent(); setShowConfirmation(false); }}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium"
+                    onClick={() => setShowConfirmation(false)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            )}
 
             {doc && (
               <div className="w-full rounded-md border p-4 space-y-2 text-sm text-foreground">
