@@ -1,14 +1,23 @@
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { b } from "@/baml_client";
 
 /**
- * This is the Drive (not Docs) upload endpoint. "upload/" + uploadType=multipart 
+ * This is the Drive (not Docs) upload endpoint. "upload/" + uploadType=multipart
  * is the variant of the API that lets us send file content instead of just
  * metadata.
- * */ 
+ * */
 const DRIVE_UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) return Response.json({ error: "unauthorized" }, { status: 401 });
+
+    const client = await clerkClient();
+    const { data } = await client.users.getUserOauthAccessToken(userId, "google");
+    const googleAccessToken = data[0]?.token;
+    if (!googleAccessToken) return Response.json({ error: "no google token found" }, { status: 401 });
+
     const { prompt } = await req.json();
 
     if (typeof prompt !== "string" || !prompt.trim()) {
@@ -63,7 +72,7 @@ export async function POST(req: Request) {
     const createRes = await fetch(DRIVE_UPLOAD_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.GOOGLE_TEST_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${googleAccessToken}`,
         "Content-Type": `multipart/related; boundary=${boundary}`,
       },
       body: multipartBody,
@@ -79,7 +88,7 @@ export async function POST(req: Request) {
     return Response.json({
       documentId,
       url: `https://docs.google.com/document/d/${documentId}/edit`,
-      doc: structuredRes,
+      content: structuredRes,
     });
   } catch (err) {
     console.error(err);

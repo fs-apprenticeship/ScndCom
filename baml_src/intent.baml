@@ -1,6 +1,8 @@
 enum IntentType {
   Calendar
   Doc
+  // Gmail: add Mail here once the Gmail feature is ready to be an active intent choice.
+  // The corresponding routing case goes in handleConfirm wherever this intent is consumed.
   Mail
   Unknown
 }
