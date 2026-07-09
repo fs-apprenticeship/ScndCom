@@ -39,8 +39,9 @@ export default function TestIntentPage() {
         case IntentType.Calendar:
           await calendar.parseCalendarIntent(transcript);
           break;
-        // Gmail: import useMail and add a Mail case calling the appropriate hook function.
-        // case IntentType.Mail:
+        case IntentType.Mail:
+          // Gmail: import useMail and add a Mail case calling the appropriate hook function.
+          break;
       }
     } finally {
       setClassifying(false);
@@ -88,7 +89,9 @@ export default function TestIntentPage() {
         {detectedIntent && (
           <div className="w-full rounded-md border p-4 space-y-1 text-sm text-foreground">
             <p className="font-semibold">Detected intent</p>
-            <p className="text-muted-foreground">{detectedIntent.intent} — {detectedIntent.summary}</p>
+            <p className="text-muted-foreground">
+              {detectedIntent.intent} — {detectedIntent.summary}
+            </p>
           </div>
         )}
 
