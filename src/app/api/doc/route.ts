@@ -7,8 +7,7 @@ import { b } from "@/baml_client";
  * is the variant of the API that lets us send file content instead of just
  * metadata.
  * */
-const DRIVE_UPLOAD_URL =
-  "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+const DRIVE_UPLOAD_URL ="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
 export async function POST(req: Request) {
   try {
