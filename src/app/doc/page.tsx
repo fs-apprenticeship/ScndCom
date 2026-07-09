@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateDocPage() {
   const [prompt, setPrompt] = useState("");
-  const [doc, setDoc] = useState<{ url: string } | null>(null);
+  const [doc, setDoc] = useState<null | { url: string }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
