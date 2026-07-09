@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
+  const [dark, setDark] = useState(() => {
     const stored = localStorage.getItem("theme") === "dark";
-    setDark(stored);
     document.documentElement.classList.toggle("dark", stored);
-  }, []);
+    return stored;
+  });
 
   function toggle() {
     const next = !dark;
@@ -19,8 +17,8 @@ export default function ThemeToggle() {
 
   return (
     <button
-      onClick={toggle}
       className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium"
+      onClick={toggle}
     >
       {dark ? "○" : "●"}
     </button>

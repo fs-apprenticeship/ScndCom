@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+
 import type { CalendarAction } from "@/baml_client";
+
 import type { CalendarIntentResult } from "../types";
 
 export function useCalendar() {
   const [pendingAction, setPendingAction] = useState<CalendarAction | null>(null);
   const [clarificationNeeded, setClarificationNeeded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<null | string>(null);
 
   // Parses a natural language transcript into a calendar action via BAML.
   async function parseCalendarIntent(transcript: string) {
@@ -16,9 +18,9 @@ export function useCalendar() {
     setError(null);
     try {
       const res = await fetch("/api/calendar/intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? res.statusText);
@@ -45,9 +47,9 @@ export function useCalendar() {
     setError(null);
     try {
       const res = await fetch("/api/calendar/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: pendingAction }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? res.statusText);
@@ -68,5 +70,5 @@ export function useCalendar() {
     setError(null);
   }
 
-  return { pendingAction, clarificationNeeded, loading, error, parseCalendarIntent, confirmEvent, reset };
+  return { clarificationNeeded, confirmEvent, error, loading, parseCalendarIntent, pendingAction, reset };
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
 import type { DocResult } from "../types";
 
 export function useDoc() {
   const [doc, setDoc] = useState<DocResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<null | string>(null);
 
   // Generates a structured doc via BAML and uploads it to Google Drive.
   async function createDoc(prompt: string) {
@@ -14,9 +15,9 @@ export function useDoc() {
     setError(null);
     try {
       const res = await fetch("/api/doc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? res.statusText);
@@ -35,5 +36,5 @@ export function useDoc() {
     setError(null);
   }
 
-  return { doc, loading, error, createDoc, reset };
+  return { createDoc, doc, error, loading, reset };
 }

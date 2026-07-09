@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+
 import { b } from "@/baml_client";
 
 // Returns the classified intent so the client can call the appropriate feature API.

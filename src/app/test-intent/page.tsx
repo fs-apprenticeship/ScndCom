@@ -7,17 +7,17 @@ import { useState } from "react";
 import ThemeToggle from "@/app/_components/theme-toggle";
 import { useCalendar } from "@/features/calendar/hooks/use-calendar";
 import { useDoc } from "@/features/doc/hooks/use-doc";
-import { parseIntent, IntentType } from "@/lib/intent/parse-intent";
+import { IntentType, parseIntent } from "@/lib/intent/parse-intent";
 
 export default function TestIntentPage() {
   const { isSignedIn } = useUser();
   const [transcript, setTranscript] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [classifying, setClassifying] = useState(false);
-  const [detectedIntent, setDetectedIntent] = useState<{
+  const [detectedIntent, setDetectedIntent] = useState<null | {
     intent: string;
     summary: string;
-  } | null>(null);
+  }>(null);
 
   const calendar = useCalendar();
   const doc = useDoc();
@@ -33,11 +33,11 @@ export default function TestIntentPage() {
       const { intent, summary } = await parseIntent(transcript);
       setDetectedIntent({ intent, summary });
       switch (intent) {
-        case IntentType.Doc:
-          await doc.createDoc(transcript);
-          break;
         case IntentType.Calendar:
           await calendar.parseCalendarIntent(transcript);
+          break;
+        case IntentType.Doc:
+          await doc.createDoc(transcript);
           break;
         case IntentType.Mail:
           // Gmail: import useMail and add a Mail case calling the appropriate hook function.
