@@ -47,3 +47,4 @@ prisma/seed-fixtures/local.ts
 
 baml_client/
 
+/src/baml_client
