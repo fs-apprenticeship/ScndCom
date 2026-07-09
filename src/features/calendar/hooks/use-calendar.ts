@@ -7,7 +7,9 @@ import type { CalendarAction } from "@/baml_client";
 import type { CalendarIntentResult } from "../types";
 
 export function useCalendar() {
-  const [pendingAction, setPendingAction] = useState<CalendarAction | null>(null);
+  const [pendingAction, setPendingAction] = useState<CalendarAction | null>(
+    null,
+  );
   const [clarificationNeeded, setClarificationNeeded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
@@ -70,5 +72,13 @@ export function useCalendar() {
     setError(null);
   }
 
-  return { clarificationNeeded, confirmEvent, error, loading, parseCalendarIntent, pendingAction, reset };
+  return {
+    clarificationNeeded,
+    confirmEvent,
+    error,
+    loading,
+    parseCalendarIntent,
+    pendingAction,
+    reset,
+  };
 }

@@ -7,17 +7,23 @@ import { b } from "@/baml_client";
  * is the variant of the API that lets us send file content instead of just
  * metadata.
  * */
-const DRIVE_UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+const DRIVE_UPLOAD_URL =
+  "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
 export async function POST(req: Request) {
   try {
     const { userId } = await auth();
-    if (!userId) return Response.json({ error: "unauthorized" }, { status: 401 });
+    if (!userId)
+      return Response.json({ error: "unauthorized" }, { status: 401 });
 
     const client = await clerkClient();
-    const { data } = await client.users.getUserOauthAccessToken(userId, "google");
+    const { data } = await client.users.getUserOauthAccessToken(
+      userId,
+      "google",
+    );
     const googleAccessToken = data[0]?.token;
-    if (!googleAccessToken) return Response.json({ error: "no google token found" }, { status: 401 });
+    if (!googleAccessToken)
+      return Response.json({ error: "no google token found" }, { status: 401 });
 
     const { prompt } = await req.json();
 
@@ -29,13 +35,13 @@ export async function POST(req: Request) {
 
     /**
      * The boundary is just a divider string invented to separate the two
-     * parts" of the multipart body below. 
-     * */ 
-    
+     * parts" of the multipart body below.
+     * */
+
     const boundary = `wubalubadubdub`;
 
     /**
-     * This is metadata telling Drive what to create. 
+     * This is metadata telling Drive what to create.
      * Setting mimeType to the Google Docs type is what tells
      * Drive "convert this into a real Doc," don't "store it as a plain file."
      * */
@@ -81,7 +87,10 @@ export async function POST(req: Request) {
 
     if (!createRes.ok) {
       const err = await createRes.json();
-      return Response.json({ details: err, error: "Drive upload/convert failed" }, { status: 500 });
+      return Response.json(
+        { details: err, error: "Drive upload/convert failed" },
+        { status: 500 },
+      );
     }
 
     const { id: documentId } = await createRes.json();

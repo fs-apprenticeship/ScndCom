@@ -8,7 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/doc(.*)",
   "/api/calendar(.*)",
   "/api/auth/sync(.*)",
-  "/test-intent"
+  "/test-intent",
 ]);
 
 export default clerkMiddleware((auth, request) => {
