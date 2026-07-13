@@ -21,6 +21,8 @@ $ pnpm add @boundaryml/baml
 import type { Image, Audio, Pdf, Video } from "@boundaryml/baml";
 import type { Checked, Check } from "./types";
 import type {
+  CalendarAction,
+  CalendarPayload,
   ClassificationLabelFeildValue,
   ClassificationLabelValue,
   CreateDraftAction,
@@ -31,6 +33,7 @@ import type {
   MessagePartHeader,
   Resume,
 } from "./types";
+(CalendarAction, CalendarPayload);
 import type * as types from "./types";
 
 /******************************************************************************
@@ -87,6 +90,18 @@ export namespace partial_types {
   export interface MessagePartHeader {
     name?: string | null;
     value?: string | null;
+  }
+  export interface CalendarAction {
+    action?: string | null;
+    summary?: string | null;
+    payload?: CalendarPayload | null;
+  }
+  export interface CalendarPayload {
+    title?: string | null;
+    start?: string | null;
+    end?: string | null;
+    description?: string | null;
+    location?: string | null;
   }
   export interface Resume {
     name?: string | null;

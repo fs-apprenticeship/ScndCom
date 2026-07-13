@@ -1,0 +1,37 @@
+### step 1: parse the voice transcript
+POST http://localhost:3000/api/calendar/intent
+Content-Type: application/json
+
+{
+  "transcript": "schedule a linear algebra review for tomorrow at 2pm for 90 minutes"
+}
+
+###
+
+### step 2: confirm
+POST http://localhost:3000/api/calendar/confirm
+Content-Type: application/json
+
+{
+  "action": {
+    "action": "calendar",
+    "summary": "Schedule a 90-minute Linear Algebra review tomorrow at 2pm",
+    "payload": {
+      "title": "Linear Algebra Review",
+      "start": "2026-05-29T14:00:00",
+      "end": "2026-05-29T15:30:00",
+      "description": "Focus session covering eigenvalues and eigenvectors",
+      "location": null
+    }
+  }
+}
+
+###
+
+### test clarification flow
+POST http://localhost:3000/api/calendar/intent
+Content-Type: application/json
+
+{
+  "transcript": "set up a study session for thermodynamics soon"
+}

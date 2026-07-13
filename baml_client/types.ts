@@ -101,6 +101,20 @@ export interface MessagePartHeader {
   value: string;
 }
 
+export interface CalendarAction {
+  action: string;
+  summary: string;
+  payload: CalendarPayload;
+}
+
+export interface CalendarPayload {
+  title: string;
+  start: string;
+  end: string;
+  description: string;
+  location?: string | null;
+}
+
 export interface Resume {
   name: string;
   email: string;

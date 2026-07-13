@@ -44,3 +44,5 @@ next-env.d.ts
 # generated
 src/generated
 prisma/seed-fixtures/local.ts
+
+src/baml_client/

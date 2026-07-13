@@ -73,11 +73,23 @@ export default class TypeBuilder {
 
   MessagePartHeader: ClassViewer<"MessagePartHeader", "name" | "value">;
 
+  CalendarAction: ClassViewer<
+    "CalendarAction",
+    "action" | "summary" | "payload"
+  >;
+
+  CalendarPayload: ClassViewer<
+    "CalendarPayload",
+    "title" | "start" | "end" | "description" | "location"
+  >;
+
   Resume: ClassViewer<"Resume", "name" | "email" | "experience" | "skills">;
 
   constructor() {
     this.tb = new _TypeBuilder({
       classes: new Set([
+        "CalendarAction",
+        "CalendarPayload",
         "ClassificationLabelFeildValue",
         "ClassificationLabelValue",
         "CreateDraftAction",
@@ -137,6 +149,20 @@ export default class TypeBuilder {
     this.MessagePartHeader = this.tb.classViewer("MessagePartHeader", [
       "name",
       "value",
+    ]);
+
+    this.CalendarAction = this.tb.classViewer("CalendarAction", [
+      "action",
+      "summary",
+      "payload",
+    ]);
+
+    this.CalendarPayload = this.tb.classViewer("CalendarPayload", [
+      "title",
+      "start",
+      "end",
+      "description",
+      "location",
     ]);
 
     this.Resume = this.tb.classViewer("Resume", [

@@ -44,6 +44,8 @@ import type {
 import type { partial_types } from "./partial_types";
 import type * as types from "./types";
 import type {
+  CalendarAction,
+  CalendarPayload,
   ClassificationLabelFeildValue,
   ClassificationLabelValue,
   CreateDraftAction,
@@ -250,27 +252,12 @@ export class BamlAsyncClient {
       throw toBamlError(error);
     }
   }
-}
 
-class BamlStreamClient {
-  private runtime: BamlRuntime;
-  private ctxManager: BamlCtxManager;
-  private bamlOptions: BamlCallOptions;
-
-  constructor(
-    runtime: BamlRuntime,
-    ctxManager: BamlCtxManager,
-    bamlOptions?: BamlCallOptions,
-  ) {
-    this.runtime = runtime;
-    this.ctxManager = ctxManager;
-    this.bamlOptions = bamlOptions || {};
-  }
-
-  CreateDraft(
-    text: string,
+  async ParseCalendarIntent(
+    transcript: string,
+    userContext: string,
     __baml_options__?: BamlCallOptions<never>,
-  ): BamlStream<partial_types.Draft, types.Draft> {
+  ): Promise<types.CalendarAction> {
     try {
       const __options__ = { ...this.bamlOptions, ...(__baml_options__ || {}) };
       const __signal__ = __options__.signal;
@@ -279,7 +266,18 @@ class BamlStreamClient {
         throw new BamlAbortError("Operation was aborted", __signal__.reason);
       }
 
-      let __collector__ = __options__.collector
+      // Check if onTick is provided - route through streaming if so
+      if (__options__.onTick) {
+        const __stream__ = this.stream.ParseCalendarIntent(
+          transcript,
+          userContext,
+          __baml_options__,
+        );
+
+        return await __stream__.getFinalResponse();
+      }
+
+      const __collector__ = __options__.collector
         ? Array.isArray(__options__.collector)
           ? __options__.collector
           : [__options__.collector]
@@ -320,12 +318,12 @@ class BamlStreamClient {
         __clientRegistry__.setPrimary(__options__.client);
       }
 
-      const __raw__ = this.runtime.streamFunction(
-        "CreateDraft",
+      const __raw__ = await this.runtime.callFunction(
+        "ParseCalendarIntent",
         {
-          text: text,
+          transcript: transcript,
+          userContext: userContext,
         },
-        undefined,
         this.ctxManager.cloneContext(),
         __options__.tb?.__tb(),
         __clientRegistry__,
@@ -333,18 +331,28 @@ class BamlStreamClient {
         __options__.tags || {},
         __env__,
         __signal__,
-        __onTickWrapper__,
+        __options__.watchers,
       );
-      return new BamlStream<partial_types.Draft, types.Draft>(
-        __raw__,
-        (a): partial_types.Draft => a,
-        (a): types.Draft => a,
-        this.ctxManager.cloneContext(),
-        __options__.signal,
-      );
+      return __raw__.parsed(false) as types.CalendarAction;
     } catch (error) {
       throw toBamlError(error);
     }
+  }
+}
+
+class BamlStreamClient {
+  private runtime: BamlRuntime;
+  private ctxManager: BamlCtxManager;
+  private bamlOptions: BamlCallOptions;
+
+  constructor(
+    runtime: BamlRuntime,
+    ctxManager: BamlCtxManager,
+    bamlOptions?: BamlCallOptions,
+  ) {
+    this.runtime = runtime;
+    this.ctxManager = ctxManager;
+    this.bamlOptions = bamlOptions || {};
   }
 
   ExtractResume(

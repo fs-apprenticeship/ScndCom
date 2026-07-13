@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     authInterrupts: true,
   },
   reactCompiler: true,
+  serverExternalPackages: ["@boundaryml/baml"],
 };
 
 const sentryOrg = process.env.SENTRY_ORG;
