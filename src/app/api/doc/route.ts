@@ -1,3 +1,5 @@
+import { auth, clerkClient } from "@clerk/nextjs/server";
+
 import { b } from "@/baml_client";
 
 /**
@@ -10,6 +12,19 @@ const DRIVE_UPLOAD_URL =
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId)
+      return Response.json({ error: "unauthorized" }, { status: 401 });
+
+    const client = await clerkClient();
+    const { data } = await client.users.getUserOauthAccessToken(
+      userId,
+      "google",
+    );
+    const googleAccessToken = data[0]?.token;
+    if (!googleAccessToken)
+      return Response.json({ error: "no google token found" }, { status: 401 });
+
     const { prompt } = await req.json();
 
     if (typeof prompt !== "string" || !prompt.trim()) {
@@ -64,7 +79,7 @@ export async function POST(req: Request) {
     const createRes = await fetch(DRIVE_UPLOAD_URL, {
       body: multipartBody,
       headers: {
-        Authorization: `Bearer ${process.env.GOOGLE_TEST_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${googleAccessToken}`,
         "Content-Type": `multipart/related; boundary=${boundary}`,
       },
       method: "POST",
@@ -81,7 +96,7 @@ export async function POST(req: Request) {
     const { id: documentId } = await createRes.json();
 
     return Response.json({
-      doc: structuredRes,
+      content: structuredRes,
       documentId,
       url: `https://docs.google.com/document/d/${documentId}/edit`,
     });

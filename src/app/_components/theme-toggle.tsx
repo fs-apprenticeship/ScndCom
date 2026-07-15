@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
+  const [dark, setDark] = useState(() => {
+    if (typeof window === "undefined") return false;
     const stored = localStorage.getItem("theme") === "dark";
     document.documentElement.classList.toggle("dark", stored);
-  }, []);
+    return stored;
+  });
 
   function toggle() {
     const next = !dark;

@@ -47,6 +47,13 @@ export function all_succeeded<CheckName extends string>(checks: Record<CheckName
 export function get_checks<CheckName extends string>(checks: Record<CheckName, Check>): Check[] {
     return Object.values(checks)
 }
+export enum IntentType {
+  Calendar = "Calendar",
+  Doc = "Doc",
+  Mail = "Mail",
+  Unknown = "Unknown",
+}
+
 export interface CalendarAction {
   action: string
   summary: string
@@ -133,6 +140,12 @@ export interface MessagePartBody {
 export interface MessagePartHeader {
   name: string
   value: string
+  
+}
+
+export interface ParsedIntent {
+  intent: IntentType
+  summary: string
   
 }
 

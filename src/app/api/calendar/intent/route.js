@@ -11,7 +11,6 @@ export async function POST(request) {
   if (!userId) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-
   const { transcript } = await request.json();
 
   const userContext = "visual learner, prefers concise summaries";

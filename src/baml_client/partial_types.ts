@@ -20,7 +20,7 @@ $ pnpm add @boundaryml/baml
 
 import type { Image, Audio, Pdf, Video } from "@boundaryml/baml"
 import type { Checked, Check } from "./types"
-import type {  CalendarAction,  CalendarPayload,  ClassificationLabelFeildValue,  ClassificationLabelValue,  CreateDocAction,  CreateDraftAction,  Draft,  LearnedProfile,  Message,  MessagePart,  MessagePartBody,  MessagePartHeader,  Resume } from "./types"
+import type {  CalendarAction,  CalendarPayload,  ClassificationLabelFeildValue,  ClassificationLabelValue,  CreateDocAction,  CreateDraftAction,  Draft,  IntentType,  LearnedProfile,  Message,  MessagePart,  MessagePartBody,  MessagePartHeader,  ParsedIntent,  Resume } from "./types"
 import type * as types from "./types"
 
 /******************************************************************************
@@ -100,6 +100,10 @@ export namespace partial_types {
     export interface MessagePartHeader {
       name?: string | null
       value?: string | null
+    }
+    export interface ParsedIntent {
+      intent?: types.IntentType | null
+      summary?: string | null
     }
     export interface Resume {
       name?: string | null

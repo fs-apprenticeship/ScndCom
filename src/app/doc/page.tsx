@@ -5,22 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
-type CreateDocSuccess = {
-  doc: unknown;
-  documentId: string;
-  url: string;
-};
-
 export default function CreateDocPage() {
   const [prompt, setPrompt] = useState("");
-  const [doc, setDoc] = useState<CreateDocSuccess | null>(null);
+  const [doc, setDoc] = useState<null | { url: string }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
   function handleCreate() {
     setLoading(true);
     setError(null);
-    fetch("/api/createDoc", {
+    fetch("/api/doc", {
       body: JSON.stringify({ prompt }),
       headers: { "Content-Type": "application/json" },
       method: "POST",

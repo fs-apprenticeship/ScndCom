@@ -23,7 +23,7 @@ import { toBamlError } from "@boundaryml/baml"
 import type { Checked, Check } from "./types"
 import type { partial_types } from "./partial_types"
 import type * as types from "./types"
-import type {CalendarAction, CalendarPayload, ClassificationLabelFeildValue, ClassificationLabelValue, CreateDocAction, CreateDraftAction, Draft, LearnedProfile, Message, MessagePart, MessagePartBody, MessagePartHeader, Resume} from "./types"
+import type {CalendarAction, CalendarPayload, ClassificationLabelFeildValue, ClassificationLabelValue, CreateDocAction, CreateDraftAction, Draft, IntentType, LearnedProfile, Message, MessagePart, MessagePartBody, MessagePartHeader, ParsedIntent, Resume} from "./types"
 import type TypeBuilder from "./type_builder"
 
 export class LlmResponseParser {
@@ -122,6 +122,29 @@ export class LlmResponseParser {
     }
   }
   
+  ParseIntent(
+      llmResponse: string,
+      __baml_options__?: { tb?: TypeBuilder, clientRegistry?: ClientRegistry, env?: Record<string, string | undefined> }
+  ): types.ParsedIntent {
+    try {
+      const __rawEnv__ = __baml_options__?.env ? { ...process.env, ...__baml_options__.env } : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(([_, value]) => value !== undefined) as [string, string][]
+      );
+      return this.runtime.parseLlmResponse(
+        "ParseIntent",
+        llmResponse,
+        false,
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __baml_options__?.clientRegistry,
+        __env__,
+      ) as types.ParsedIntent
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
+  
 }
 
 export class LlmStreamParser {
@@ -215,6 +238,29 @@ export class LlmStreamParser {
         __baml_options__?.clientRegistry,
         __env__,
       ) as partial_types.CalendarAction
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
+  
+  ParseIntent(
+      llmResponse: string,
+      __baml_options__?: { tb?: TypeBuilder, clientRegistry?: ClientRegistry, env?: Record<string, string | undefined> }
+  ): partial_types.ParsedIntent {
+    try {
+      const __rawEnv__ = __baml_options__?.env ? { ...process.env, ...__baml_options__.env } : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(([_, value]) => value !== undefined) as [string, string][]
+      );
+      return this.runtime.parseLlmResponse(
+        "ParseIntent",
+        llmResponse,
+        true,
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __baml_options__?.clientRegistry,
+        __env__,
+      ) as partial_types.ParsedIntent
     } catch (error) {
       throw toBamlError(error);
     }

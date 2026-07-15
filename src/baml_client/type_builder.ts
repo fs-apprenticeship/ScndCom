@@ -51,17 +51,21 @@ export default class TypeBuilder {
     
     MessagePartHeader: ClassViewer<'MessagePartHeader', "name" | "value">;
     
+    ParsedIntent: ClassViewer<'ParsedIntent', "intent" | "summary">;
+    
     Resume: ClassViewer<'Resume', "name" | "email" | "experience" | "skills">;
     
+    
+    IntentType: EnumViewer<'IntentType', "Calendar" | "Doc" | "Mail" | "Unknown">;
     
 
     constructor() {
         this.tb = new _TypeBuilder({
           classes: new Set([
-            "CalendarAction","CalendarPayload","ClassificationLabelFeildValue","ClassificationLabelValue","CreateDocAction","CreateDraftAction","Draft","LearnedProfile","Message","MessagePart","MessagePartBody","MessagePartHeader","Resume",
+            "CalendarAction","CalendarPayload","ClassificationLabelFeildValue","ClassificationLabelValue","CreateDocAction","CreateDraftAction","Draft","LearnedProfile","Message","MessagePart","MessagePartBody","MessagePartHeader","ParsedIntent","Resume",
           ]),
           enums: new Set([
-            
+            "IntentType",
           ]),
           runtime: DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME
         });
@@ -114,10 +118,18 @@ export default class TypeBuilder {
           "name","value",
         ]);
         
+        this.ParsedIntent = this.tb.classViewer("ParsedIntent", [
+          "intent","summary",
+        ]);
+        
         this.Resume = this.tb.classViewer("Resume", [
           "name","email","experience","skills",
         ]);
         
+        
+        this.IntentType = this.tb.enumViewer("IntentType", [
+          "Calendar","Doc","Mail","Unknown",
+        ]);
         
     }
 

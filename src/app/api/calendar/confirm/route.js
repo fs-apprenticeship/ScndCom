@@ -1,5 +1,3 @@
-export const runtime = "nodejs";
-
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
