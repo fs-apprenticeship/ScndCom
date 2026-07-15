@@ -20,7 +20,20 @@ $ pnpm add @boundaryml/baml
 
 import type { Image, Audio, Pdf, Video } from "@boundaryml/baml";
 import type { Checked, Check } from "./types";
-import type { CalendarAction, CalendarPayload, Resume } from "./types";
+import type {
+  CalendarAction,
+  CalendarPayload,
+  ClassificationLabelFeildValue,
+  ClassificationLabelValue,
+  CreateDraftAction,
+  Draft,
+  Message,
+  MessagePart,
+  MessagePartBody,
+  MessagePartHeader,
+  Resume,
+} from "./types";
+(CalendarAction, CalendarPayload);
 import type * as types from "./types";
 
 /******************************************************************************
@@ -36,6 +49,48 @@ export interface StreamState<T> {
 }
 
 export namespace partial_types {
+  export interface ClassificationLabelFeildValue {
+    fieldId?: string | null;
+    selection?: string | null;
+  }
+  export interface ClassificationLabelValue {
+    labelId?: string | null;
+    fields: ClassificationLabelFeildValue[];
+  }
+  export interface CreateDraftAction {}
+  export interface Draft {
+    id?: string | null;
+    message?: Message | null;
+  }
+  export interface Message {
+    id?: string | null;
+    threadId?: string | null;
+    labelIds: string[];
+    snippet?: string | null;
+    historyId?: string | null;
+    internalDate?: string | null;
+    payload?: MessagePart | null;
+    sizeEstimate?: number | null;
+    raw?: string | null;
+    classificationLabelValues?: ClassificationLabelValue | null;
+  }
+  export interface MessagePart {
+    partId?: string | null;
+    mimeType?: string | null;
+    filename?: string | null;
+    headers: MessagePartHeader[];
+    body?: MessagePartBody | null;
+    parts: MessagePart[];
+  }
+  export interface MessagePartBody {
+    size?: number | null;
+    data?: string | null;
+    attachmentId?: string | null;
+  }
+  export interface MessagePartHeader {
+    name?: string | null;
+    value?: string | null;
+  }
   export interface CalendarAction {
     action?: string | null;
     summary?: string | null;

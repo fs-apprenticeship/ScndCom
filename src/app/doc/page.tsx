@@ -1,22 +1,23 @@
 "use client";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateDocPage() {
   const [prompt, setPrompt] = useState("");
-  const [doc, setDoc] = useState(null);
+  const [doc, setDoc] = useState<null | { url: string }>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<null | string>(null);
 
   function handleCreate() {
     setLoading(true);
     setError(null);
-    fetch("/api/createDoc", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch("/api/doc", {
       body: JSON.stringify({ prompt }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -30,6 +31,9 @@ export default function CreateDocPage() {
       .catch((err) => {
         setLoading(false);
         setError(String(err));
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
@@ -37,12 +41,12 @@ export default function CreateDocPage() {
     <div className="p-8 max-w-2xl">
       <div className="grid w-full gap-2">
         <Textarea
-          value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="What do you want to document..."
           rows={6}
+          value={prompt}
         />
-        <Button onClick={handleCreate} disabled={loading || !prompt.trim()}>
+        <Button disabled={loading || !prompt.trim()} onClick={handleCreate}>
           {loading ? (
             <>
               <Spinner data-icon="inline-start" />
@@ -58,7 +62,7 @@ export default function CreateDocPage() {
 
       {doc && (
         <div className="mt-4">
-          <a href={(doc as any).url} target="_blank" rel="noreferrer">
+          <a href={doc.url} rel="noreferrer" target="_blank">
             Open in Google Docs
           </a>
           <pre>{JSON.stringify(doc, null, 2)}</pre>

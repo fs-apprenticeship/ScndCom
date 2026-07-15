@@ -1,14 +1,30 @@
+import { auth, clerkClient } from "@clerk/nextjs/server";
+
 import { b } from "@/baml_client";
 
 /**
- * This is the Drive (not Docs) upload endpoint. "upload/" + uploadType=multipart 
+ * This is the Drive (not Docs) upload endpoint. "upload/" + uploadType=multipart
  * is the variant of the API that lets us send file content instead of just
  * metadata.
- * */ 
-const DRIVE_UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+ * */
+const DRIVE_UPLOAD_URL =
+  "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId)
+      return Response.json({ error: "unauthorized" }, { status: 401 });
+
+    const client = await clerkClient();
+    const { data } = await client.users.getUserOauthAccessToken(
+      userId,
+      "google",
+    );
+    const googleAccessToken = data[0]?.token;
+    if (!googleAccessToken)
+      return Response.json({ error: "no google token found" }, { status: 401 });
+
     const { prompt } = await req.json();
 
     if (typeof prompt !== "string" || !prompt.trim()) {
@@ -19,19 +35,19 @@ export async function POST(req: Request) {
 
     /**
      * The boundary is just a divider string invented to separate the two
-     * parts" of the multipart body below. 
-     * */ 
-    
+     * parts" of the multipart body below.
+     * */
+
     const boundary = `wubalubadubdub`;
 
     /**
-     * This is metadata telling Drive what to create. 
+     * This is metadata telling Drive what to create.
      * Setting mimeType to the Google Docs type is what tells
      * Drive "convert this into a real Doc," don't "store it as a plain file."
      * */
     const metadata = {
-      name: structuredRes.title,
       mimeType: "application/vnd.google-apps.document",
+      name: structuredRes.title,
     };
 
     /**
@@ -61,25 +77,28 @@ export async function POST(req: Request) {
      * instead of the two-step create-then-batchUpdate flow required by the docs API.
      * */
     const createRes = await fetch(DRIVE_UPLOAD_URL, {
-      method: "POST",
+      body: multipartBody,
       headers: {
-        Authorization: `Bearer ${process.env.GOOGLE_TEST_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${googleAccessToken}`,
         "Content-Type": `multipart/related; boundary=${boundary}`,
       },
-      body: multipartBody,
+      method: "POST",
     });
 
     if (!createRes.ok) {
       const err = await createRes.json();
-      return Response.json({ error: "Drive upload/convert failed", details: err }, { status: 500 });
+      return Response.json(
+        { details: err, error: "Drive upload/convert failed" },
+        { status: 500 },
+      );
     }
 
     const { id: documentId } = await createRes.json();
 
     return Response.json({
+      content: structuredRes,
       documentId,
       url: `https://docs.google.com/document/d/${documentId}/edit`,
-      doc: structuredRes,
     });
   } catch (err) {
     console.error(err);

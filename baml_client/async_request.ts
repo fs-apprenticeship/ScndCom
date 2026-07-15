@@ -30,7 +30,19 @@ import type {
 import { toBamlError, HTTPRequest, ClientRegistry } from "@boundaryml/baml";
 import type { Checked, Check } from "./types";
 import type * as types from "./types";
-import type { CalendarAction, CalendarPayload, Resume } from "./types";
+import type {
+  ClassificationLabelFeildValue,
+  ClassificationLabelValue,
+  CreateDraftAction,
+  Draft,
+  Message,
+  MessagePart,
+  MessagePartBody,
+  MessagePartHeader,
+  Resume,
+  CalendarAction,
+  CalendarPayload,
+} from "./types";
 import type TypeBuilder from "./type_builder";
 import type * as events from "./events";
 
@@ -50,6 +62,43 @@ export class AsyncHttpRequest {
     private runtime: BamlRuntime,
     private ctxManager: BamlCtxManager,
   ) {}
+
+  async CreateDraft(
+    text: string,
+    __baml_options__?: BamlCallOptions<never>,
+  ): Promise<HTTPRequest> {
+    try {
+      const __rawEnv__ = __baml_options__?.env
+        ? { ...process.env, ...__baml_options__.env }
+        : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(
+          ([_, value]) => value !== undefined,
+        ) as [string, string][],
+      );
+
+      // Resolve client option to clientRegistry (client takes precedence)
+      let __clientRegistry__ = __baml_options__?.clientRegistry;
+      if (__baml_options__?.client) {
+        __clientRegistry__ = __clientRegistry__ || new ClientRegistry();
+        __clientRegistry__.setPrimary(__baml_options__.client);
+      }
+
+      return await this.runtime.buildRequest(
+        "CreateDraft",
+        {
+          text: text,
+        },
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __clientRegistry__,
+        false,
+        __env__,
+      );
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
 
   async ExtractResume(
     resume: string,
@@ -133,6 +182,43 @@ export class AsyncHttpStreamRequest {
     private runtime: BamlRuntime,
     private ctxManager: BamlCtxManager,
   ) {}
+
+  async CreateDraft(
+    text: string,
+    __baml_options__?: BamlCallOptions<never>,
+  ): Promise<HTTPRequest> {
+    try {
+      const __rawEnv__ = __baml_options__?.env
+        ? { ...process.env, ...__baml_options__.env }
+        : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(
+          ([_, value]) => value !== undefined,
+        ) as [string, string][],
+      );
+
+      // Resolve client option to clientRegistry (client takes precedence)
+      let __clientRegistry__ = __baml_options__?.clientRegistry;
+      if (__baml_options__?.client) {
+        __clientRegistry__ = __clientRegistry__ || new ClientRegistry();
+        __clientRegistry__.setPrimary(__baml_options__.client);
+      }
+
+      return await this.runtime.buildRequest(
+        "CreateDraft",
+        {
+          text: text,
+        },
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __clientRegistry__,
+        true,
+        __env__,
+      );
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
 
   async ExtractResume(
     resume: string,

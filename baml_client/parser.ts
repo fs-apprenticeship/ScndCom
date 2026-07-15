@@ -32,7 +32,19 @@ import { toBamlError } from "@boundaryml/baml";
 import type { Checked, Check } from "./types";
 import type { partial_types } from "./partial_types";
 import type * as types from "./types";
-import type { CalendarAction, CalendarPayload, Resume } from "./types";
+import type {
+  ClassificationLabelFeildValue,
+  ClassificationLabelValue,
+  CreateDraftAction,
+  Draft,
+  Message,
+  MessagePart,
+  MessagePartBody,
+  MessagePartHeader,
+  Resume,
+  CalendarAction,
+  CalendarPayload,
+} from "./types";
 import type TypeBuilder from "./type_builder";
 
 export class LlmResponseParser {
@@ -40,6 +52,37 @@ export class LlmResponseParser {
     private runtime: BamlRuntime,
     private ctxManager: BamlCtxManager,
   ) {}
+
+  CreateDraft(
+    llmResponse: string,
+    __baml_options__?: {
+      tb?: TypeBuilder;
+      clientRegistry?: ClientRegistry;
+      env?: Record<string, string | undefined>;
+    },
+  ): types.Draft {
+    try {
+      const __rawEnv__ = __baml_options__?.env
+        ? { ...process.env, ...__baml_options__.env }
+        : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(
+          ([_, value]) => value !== undefined,
+        ) as [string, string][],
+      );
+      return this.runtime.parseLlmResponse(
+        "CreateDraft",
+        llmResponse,
+        false,
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __baml_options__?.clientRegistry,
+        __env__,
+      ) as types.Draft;
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
 
   ExtractResume(
     llmResponse: string,
@@ -67,6 +110,44 @@ export class LlmResponseParser {
         __baml_options__?.clientRegistry,
         __env__,
       ) as types.Resume;
+    } catch (error) {
+      throw toBamlError(error);
+    }
+  }
+}
+
+export class LlmStreamParser {
+  constructor(
+    private runtime: BamlRuntime,
+    private ctxManager: BamlCtxManager,
+  ) {}
+
+  CreateDraft(
+    llmResponse: string,
+    __baml_options__?: {
+      tb?: TypeBuilder;
+      clientRegistry?: ClientRegistry;
+      env?: Record<string, string | undefined>;
+    },
+  ): partial_types.Draft {
+    try {
+      const __rawEnv__ = __baml_options__?.env
+        ? { ...process.env, ...__baml_options__.env }
+        : { ...process.env };
+      const __env__: Record<string, string> = Object.fromEntries(
+        Object.entries(__rawEnv__).filter(
+          ([_, value]) => value !== undefined,
+        ) as [string, string][],
+      );
+      return this.runtime.parseLlmResponse(
+        "CreateDraft",
+        llmResponse,
+        true,
+        this.ctxManager.cloneContext(),
+        __baml_options__?.tb?.__tb(),
+        __baml_options__?.clientRegistry,
+        __env__,
+      ) as partial_types.Draft;
     } catch (error) {
       throw toBamlError(error);
     }
@@ -102,13 +183,6 @@ export class LlmResponseParser {
       throw toBamlError(error);
     }
   }
-}
-
-export class LlmStreamParser {
-  constructor(
-    private runtime: BamlRuntime,
-    private ctxManager: BamlCtxManager,
-  ) {}
 
   ExtractResume(
     llmResponse: string,

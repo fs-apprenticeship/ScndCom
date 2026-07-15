@@ -51,6 +51,56 @@ export function get_checks<CheckName extends string>(
 ): Check[] {
   return Object.values(checks);
 }
+export interface ClassificationLabelFeildValue {
+  fieldId: string;
+  selection: string;
+}
+
+export interface ClassificationLabelValue {
+  labelId: string;
+  fields: ClassificationLabelFeildValue[];
+}
+
+export interface CreateDraftAction {}
+
+export interface Draft {
+  id: string;
+  message: Message;
+}
+
+export interface Message {
+  id: string;
+  threadId: string;
+  labelIds: string[];
+  snippet: string;
+  historyId: string;
+  internalDate: string;
+  payload: MessagePart;
+  sizeEstimate: number;
+  raw: string;
+  classificationLabelValues: ClassificationLabelValue;
+}
+
+export interface MessagePart {
+  partId: string;
+  mimeType: string;
+  filename: string;
+  headers: MessagePartHeader[];
+  body: MessagePartBody;
+  parts: MessagePart[];
+}
+
+export interface MessagePartBody {
+  size: number;
+  data: string;
+  attachmentId: string;
+}
+
+export interface MessagePartHeader {
+  name: string;
+  value: string;
+}
+
 export interface CalendarAction {
   action: string;
   summary: string;

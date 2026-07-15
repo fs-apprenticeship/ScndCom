@@ -33,6 +33,46 @@ export { FieldType, EnumBuilder, ClassBuilder };
 export default class TypeBuilder {
   private tb: _TypeBuilder;
 
+  ClassificationLabelFeildValue: ClassViewer<
+    "ClassificationLabelFeildValue",
+    "fieldId" | "selection"
+  >;
+
+  ClassificationLabelValue: ClassViewer<
+    "ClassificationLabelValue",
+    "labelId" | "fields"
+  >;
+
+  CreateDraftAction: ClassViewer<"CreateDraftAction">;
+
+  Draft: ClassViewer<"Draft", "id" | "message">;
+
+  Message: ClassViewer<
+    "Message",
+    | "id"
+    | "threadId"
+    | "labelIds"
+    | "snippet"
+    | "historyId"
+    | "internalDate"
+    | "payload"
+    | "sizeEstimate"
+    | "raw"
+    | "classificationLabelValues"
+  >;
+
+  MessagePart: ClassViewer<
+    "MessagePart",
+    "partId" | "mimeType" | "filename" | "headers" | "body" | "parts"
+  >;
+
+  MessagePartBody: ClassViewer<
+    "MessagePartBody",
+    "size" | "data" | "attachmentId"
+  >;
+
+  MessagePartHeader: ClassViewer<"MessagePartHeader", "name" | "value">;
+
   CalendarAction: ClassViewer<
     "CalendarAction",
     "action" | "summary" | "payload"
@@ -47,10 +87,69 @@ export default class TypeBuilder {
 
   constructor() {
     this.tb = new _TypeBuilder({
-      classes: new Set(["CalendarAction", "CalendarPayload", "Resume"]),
+      classes: new Set([
+        "CalendarAction",
+        "CalendarPayload",
+        "ClassificationLabelFeildValue",
+        "ClassificationLabelValue",
+        "CreateDraftAction",
+        "Draft",
+        "Message",
+        "MessagePart",
+        "MessagePartBody",
+        "MessagePartHeader",
+        "Resume",
+      ]),
       enums: new Set([]),
       runtime: DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME,
     });
+
+    this.ClassificationLabelFeildValue = this.tb.classViewer(
+      "ClassificationLabelFeildValue",
+      ["fieldId", "selection"],
+    );
+
+    this.ClassificationLabelValue = this.tb.classViewer(
+      "ClassificationLabelValue",
+      ["labelId", "fields"],
+    );
+
+    this.CreateDraftAction = this.tb.classViewer("CreateDraftAction", []);
+
+    this.Draft = this.tb.classViewer("Draft", ["id", "message"]);
+
+    this.Message = this.tb.classViewer("Message", [
+      "id",
+      "threadId",
+      "labelIds",
+      "snippet",
+      "historyId",
+      "internalDate",
+      "payload",
+      "sizeEstimate",
+      "raw",
+      "classificationLabelValues",
+    ]);
+
+    this.MessagePart = this.tb.classViewer("MessagePart", [
+      "partId",
+      "mimeType",
+      "filename",
+      "headers",
+      "body",
+      "parts",
+    ]);
+
+    this.MessagePartBody = this.tb.classViewer("MessagePartBody", [
+      "size",
+      "data",
+      "attachmentId",
+    ]);
+
+    this.MessagePartHeader = this.tb.classViewer("MessagePartHeader", [
+      "name",
+      "value",
+    ]);
 
     this.CalendarAction = this.tb.classViewer("CalendarAction", [
       "action",

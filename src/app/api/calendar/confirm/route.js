@@ -1,5 +1,3 @@
-export const runtime = "nodejs";
-
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -14,7 +12,10 @@ export async function POST(request) {
   const googleAccessToken = data[0]?.token;
 
   if (!googleAccessToken) {
-    return NextResponse.json({ error: "no google token found" }, { status: 401 });
+    return NextResponse.json(
+      { error: "no google token found" },
+      { status: 401 },
+    );
   }
 
   const { action } = await request.json();
