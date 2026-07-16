@@ -2,26 +2,26 @@
 
 import { useState } from "react";
 
-import type { DocResult } from "../types";
+import type { GDocResult } from "../types";
 
-export function useDoc() {
-  const [doc, setDoc] = useState<DocResult | null>(null);
+export function useGDoc() {
+  const [doc, setDoc] = useState<GDocResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
   // Generates a structured doc via BAML and uploads it to Google Drive.
-  async function createDoc(prompt: string) {
+  async function createGDoc(prompt: string) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/doc", {
+      const res = await fetch("/api/gdoc", {
         body: JSON.stringify({ prompt }),
         headers: { "Content-Type": "application/json" },
         method: "POST",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? res.statusText);
-      setDoc(data as DocResult);
+      setDoc(data as GDocResult);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -36,5 +36,5 @@ export function useDoc() {
     setError(null);
   }
 
-  return { createDoc, doc, error, loading, reset };
+  return { createGDoc, doc, error, loading, reset };
 }

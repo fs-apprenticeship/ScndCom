@@ -5,9 +5,10 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/intent(.*)",
-  "/api/doc(.*)",
+  "/api/gdoc(.*)",
   "/api/calendar(.*)",
   "/api/auth/sync(.*)",
+  "/dashboard",
   "/test-intent",
 ]);
 

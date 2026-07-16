@@ -1,4 +1,4 @@
-export type DocResult = {
+export type GDocResult = {
   content: {
     content: string;
     learned_profile: { learning_style: string; preferred_formats: string[] };

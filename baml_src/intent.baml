@@ -1,6 +1,6 @@
 enum IntentType {
   Calendar
-  Doc
+  GDoc
   Mail
   Unknown
 }
@@ -22,7 +22,7 @@ function ParseIntent(input: string) -> ParsedIntent {
     Choose Calendar when the user wants to schedule, add, book, or create a
     calendar event.
 
-    Choose Doc when the user wants to create, draft, write, or generate a
+    Choose GDoc when the user wants to create, draft, write, or generate a
     document, note, study guide, summary, outline, or other Google Doc content.
 
     Choose Mail when the user wants to write, draft, or send an email.
@@ -41,7 +41,7 @@ test CalendarIntent {
   }
 }
 
-test DocIntent {
+test GDocIntent {
   functions [ParseIntent]
 
   args {

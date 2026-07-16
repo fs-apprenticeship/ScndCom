@@ -160,3 +160,35 @@
     @apply font-sans;
   }
 }
+
+@keyframes dashboard-wave-idle {
+  from {
+    transform: scaleY(0.12);
+  }
+
+  to {
+    transform: scaleY(0.32);
+  }
+}
+
+@keyframes dashboard-wave-listening {
+  from {
+    transform: scaleY(0.25);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes dashboard-mic-pulse {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}

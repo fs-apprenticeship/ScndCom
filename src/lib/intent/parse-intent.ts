@@ -1,16 +1,16 @@
 export enum IntentType {
   Calendar = "Calendar",
-  Doc = "Doc",
+  GDoc = "GDoc",
   Mail = "Mail",
   Unknown = "Unknown",
 }
 
-type ParseIntentResult = {
+export type ParsedIntent = {
   intent: IntentType;
   summary: string;
 };
 
-export async function parseIntent(input: string): Promise<ParseIntentResult> {
+export async function parseIntent(input: string): Promise<ParsedIntent> {
   const res = await fetch("/api/intent", {
     body: JSON.stringify({ input }),
     headers: { "Content-Type": "application/json" },
@@ -18,5 +18,5 @@ export async function parseIntent(input: string): Promise<ParseIntentResult> {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error ?? res.statusText);
-  return data as ParseIntentResult;
+  return data as ParsedIntent;
 }

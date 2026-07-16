@@ -7,7 +7,8 @@ import { b } from "@/baml_client";
  * is the variant of the API that lets us send file content instead of just
  * metadata.
  * */
-const DRIVE_UPLOAD_URL ="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+const DRIVE_UPLOAD_URL =
+  "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
 export async function POST(req: Request) {
   try {
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    const structuredRes = await b.CreateDoc(prompt);
+    const structuredGDoc = await b.CreateGDoc(prompt);
 
     /**
      * The boundary is just a divider string invented to separate the two
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
      * */
     const metadata = {
       mimeType: "application/vnd.google-apps.document",
-      name: structuredRes.title,
+      name: structuredGDoc.title,
     };
 
     /**
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
        * and bullets into Google Docs formatting automatically.
        * */
       `Content-Type: text/markdown\r\n\r\n` +
-      `${structuredRes.content}\r\n` +
+      `${structuredGDoc.content}\r\n` +
       `--${boundary}--`;
 
     /**
@@ -95,12 +96,15 @@ export async function POST(req: Request) {
     const { id: documentId } = await createRes.json();
 
     return Response.json({
-      content: structuredRes,
+      content: structuredGDoc,
       documentId,
       url: `https://docs.google.com/document/d/${documentId}/edit`,
     });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: "Failed to generate doc" }, { status: 500 });
+    return Response.json(
+      { error: "Failed to generate document" },
+      { status: 500 },
+    );
   }
 }

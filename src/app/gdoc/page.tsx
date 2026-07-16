@@ -5,16 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function CreateDocPage() {
+export default function CreateGDocPage() {
   const [prompt, setPrompt] = useState("");
-  const [doc, setDoc] = useState<null | { url: string }>(null);
+  const [gdoc, setGDoc] = useState<null | { url: string }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
   function handleCreate() {
     setLoading(true);
     setError(null);
-    fetch("/api/doc", {
+    fetch("/api/gdoc", {
       body: JSON.stringify({ prompt }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -25,7 +25,7 @@ export default function CreateDocPage() {
         if (data.error) {
           setError(JSON.stringify(data, null, 2));
         } else {
-          setDoc(data);
+          setGDoc(data);
         }
       })
       .catch((err) => {
@@ -57,12 +57,12 @@ export default function CreateDocPage() {
 
       {error && <pre className="mt-4">{error}</pre>}
 
-      {doc && (
+      {gdoc && (
         <div className="mt-4">
-          <a href={doc.url} rel="noreferrer" target="_blank">
+          <a href={gdoc.url} rel="noreferrer" target="_blank">
             Open in Google Docs
           </a>
-          <pre>{JSON.stringify(doc, null, 2)}</pre>
+          <pre>{JSON.stringify(gdoc, null, 2)}</pre>
         </div>
       )}
     </div>

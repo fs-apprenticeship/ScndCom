@@ -2,25 +2,36 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
 
-  const client = await clerkClient();
-  const { data } = await client.users.getUserOauthAccessToken(userId, "google");
-  const googleAccessToken = data[0]?.token;
+    const client = await clerkClient();
+    const { data } = await client.users.getUserOauthAccessToken(
+      userId,
+      "google",
+    );
+    const googleAccessToken = data[0]?.token;
 
-  if (!googleAccessToken) {
+    if (!googleAccessToken) {
+      return NextResponse.json(
+        { error: "no google token found" },
+        { status: 401 },
+      );
+    }
+
+    const { action } = await request.json();
+    const event = await createCalendarEvent(action.payload, googleAccessToken);
+    return NextResponse.json({ event, status: "success" });
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
-      { error: "no google token found" },
-      { status: 401 },
+      { error: "Failed to create calendar event" },
+      { status: 502 },
     );
   }
-
-  const { action } = await request.json();
-  const event = await createCalendarEvent(action.payload, googleAccessToken);
-  return NextResponse.json({ event, status: "success" });
 }
 
 async function createCalendarEvent(payload, accessToken) {
@@ -50,5 +61,9 @@ async function createCalendarEvent(payload, accessToken) {
     },
   );
 
-  return response.json();
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error?.message ?? "Google Calendar request failed");
+  }
+  return data;
 }

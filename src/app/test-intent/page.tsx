@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import ThemeToggle from "@/app/_components/theme-toggle";
 import { useCalendar } from "@/features/calendar/hooks/use-calendar";
-import { useDoc } from "@/features/doc/hooks/use-doc";
+import { useGDoc } from "@/features/gdoc/hooks/use-gdoc";
 import { IntentType, parseIntent } from "@/lib/intent/parse-intent";
 
 export default function TestIntentPage() {
@@ -20,9 +20,9 @@ export default function TestIntentPage() {
   }>(null);
 
   const calendar = useCalendar();
-  const doc = useDoc();
+  const gdoc = useGDoc();
 
-  const loading = classifying || calendar.loading || doc.loading;
+  const loading = classifying || calendar.loading || gdoc.loading;
 
   // Classifies the transcript and delegates to the appropriate feature.
   // To add Gmail: import useMail and add a Mail branch below calling the appropriate hook function.
@@ -36,8 +36,8 @@ export default function TestIntentPage() {
         case IntentType.Calendar:
           await calendar.parseCalendarIntent(transcript);
           break;
-        case IntentType.Doc:
-          await doc.createDoc(transcript);
+        case IntentType.GDoc:
+          await gdoc.createGDoc(transcript);
           break;
         case IntentType.Mail:
           // Gmail: import useMail and add a Mail case calling the appropriate hook function.
@@ -52,7 +52,7 @@ export default function TestIntentPage() {
     setTranscript("");
     setShowConfirmation(false);
     setDetectedIntent(null);
-    doc.reset();
+    gdoc.reset();
     calendar.reset();
   }
 
@@ -146,32 +146,32 @@ export default function TestIntentPage() {
               </div>
             )}
 
-            {(doc.error ?? calendar.error) && (
+            {(gdoc.error ?? calendar.error) && (
               <div className="w-full rounded-md border border-red-300 p-4 text-sm text-red-600">
-                {doc.error ?? calendar.error}
+                {gdoc.error ?? calendar.error}
               </div>
             )}
 
-            {doc.doc && (
+            {gdoc.doc && (
               <div className="w-full rounded-md border p-4 space-y-2 text-sm text-foreground">
-                <p className="font-semibold">{doc.doc.content.title}</p>
+                <p className="font-semibold">{gdoc.doc.content.title}</p>
                 <a
                   className="text-blue-500 underline block"
-                  href={doc.doc.url}
+                  href={gdoc.doc.url}
                   rel="noreferrer"
                   target="_blank"
                 >
                   Open in Google Docs
                 </a>
                 <p className="text-muted-foreground text-xs">
-                  Topics: {doc.doc.content.topics.join(", ")}
+                  Topics: {gdoc.doc.content.topics.join(", ")}
                 </p>
                 <details className="text-xs">
                   <summary className="cursor-pointer text-muted-foreground">
                     Learned profile
                   </summary>
                   <pre className="mt-2 whitespace-pre-wrap">
-                    {JSON.stringify(doc.doc.content.learned_profile, null, 2)}
+                    {JSON.stringify(gdoc.doc.content.learned_profile, null, 2)}
                   </pre>
                 </details>
               </div>
@@ -183,7 +183,7 @@ export default function TestIntentPage() {
                   <p className="font-semibold">Calendar event pending</p>
                   {calendar.clarificationNeeded && (
                     <span className="text-xs text-muted-foreground">
-                      — time unclear
+                      : time unclear
                     </span>
                   )}
                 </div>
