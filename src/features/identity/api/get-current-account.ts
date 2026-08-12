@@ -5,6 +5,7 @@ import getClient from "@/lib/prisma/get-client";
 export default async function getCurrentAccount() {
   const { userId: clerkUserId } = await auth();
 
+  /*
   if (clerkUserId) {
     const prisma = getClient();
 
@@ -12,4 +13,5 @@ export default async function getCurrentAccount() {
       where: { clerkUserId },
     });
   }
+    */
 }
