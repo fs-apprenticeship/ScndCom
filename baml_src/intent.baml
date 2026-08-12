@@ -11,7 +11,7 @@ class ParsedIntent {
 }
 
 function ParseIntent(input: string) -> ParsedIntent {
-  client CustomGPT5Mini
+  client "CustomGPT4o"
   prompt #"
     You classify user requests for an assistant that can prepare calendar events
     make notes in Google Docs or write emails using GMAIL.

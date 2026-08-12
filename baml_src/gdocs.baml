@@ -11,7 +11,7 @@ class LearnedProfile {
 }
 
 function CreateGDoc(input: string) -> CreateGDocAction {
-    client "CustomGPT5Mini"
+    client "CustomGPT4o"
     prompt #"
     {{ input }}
 
